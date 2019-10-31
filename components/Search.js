@@ -37,6 +37,22 @@ function Search({ handleSearch }) {
       />
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
       <input className="search__button" type="submit" onClick={handleSubmit} />
+      <style jsx>{`
+        .search {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .search__input {
+          width: 15rem;
+          padding: 0.5rem 1rem;
+        }
+
+        .search__input:focus {
+          outline: none;
+        }
+      `}</style>
     </form>
   );
 }

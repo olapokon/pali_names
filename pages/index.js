@@ -3,6 +3,7 @@ import fetch from "isomorphic-unfetch";
 
 import Search from "../components/Search";
 import DataDisplay from "../components/DataDisplay";
+import NoResults from "../components/NoResults";
 
 function Index() {
   const [data, setData] = useState([]);
@@ -22,8 +23,9 @@ function Index() {
           throw new Error(data.error);
         }
 
-        console.log(data);
-        setData(data);
+        // if there are no results, set data to an empty string so that
+        // the 'no results' component is rendered
+        data.length > 0 ? setData(data) : setData("");
       } catch (error) {
         console.error(error);
       }
@@ -33,7 +35,14 @@ function Index() {
   return (
     <div className="main">
       <Search handleSearch={handleSearch} />
-      <DataDisplay data={data} />
+      {data ? <DataDisplay data={data} /> : <NoResults />}
+      <style jsx>{`
+        .main {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      `}</style>
     </div>
   );
 }

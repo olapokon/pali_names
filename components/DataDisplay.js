@@ -11,6 +11,25 @@ function DataDisplay({ data }) {
             </li>
           ))}
       </ul>
+      <style jsx>{`
+        li {
+          list-style-type: none;
+          display: flex;
+        }
+
+        a:link,
+        a:visited {
+          color: orchid;
+          text-decoration: none;
+          width: 100%;
+          padding: 0.5rem 1rem;
+        }
+
+        a:hover {
+          color: white;
+          background-color: #cb1acb;
+        }
+      `}</style>
     </div>
   );
 }

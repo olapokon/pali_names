@@ -9,6 +9,12 @@ function SpecialCharacters({ insertSpecialCharacter }) {
       <input value="ū" type="button" onClick={handleClick} />
       <input value="ī" type="button" onClick={handleClick} />
       <input value="ñ" type="button" onClick={handleClick} />
+      <style jsx>{`
+        .specialCharacters {
+          display: flex;
+          justify-content: center;
+        }
+      `}</style>
     </div>
   );
 }
