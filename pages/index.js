@@ -1,21 +1,11 @@
 import { useState } from "react";
 import fetch from "isomorphic-unfetch";
+
 import Search from "../components/Search";
+import DataDisplay from "../components/DataDisplay";
 
 function Index() {
-  // const initialState = {
-  //   searchInput: ""
-  // };
-  // const [data, setData] = useState(initialState);
-
-  // function handleChange(event) {
-  //   const { name } = event.target;
-  //   const { value } = event.target;
-  //   setData({
-  //     ...data,
-  //     [name]: value
-  //   });
-  // }
+  const [data, setData] = useState([]);
 
   async function handleSearch(searchInput) {
     if (searchInput.trim().length > 2) {
@@ -27,12 +17,13 @@ function Index() {
           },
           body: JSON.stringify({ searchInput })
         });
-        const data = await res.json();
+        const data = JSON.parse(await res.json());
         if (data.error) {
           throw new Error(data.error);
         }
 
         console.log(data);
+        setData(data);
       } catch (error) {
         console.error(error);
       }
@@ -42,6 +33,7 @@ function Index() {
   return (
     <div className="main">
       <Search handleSearch={handleSearch} />
+      <DataDisplay data={data} />
     </div>
   );
 }

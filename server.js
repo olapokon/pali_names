@@ -41,10 +41,10 @@ app.prepare().then(() => {
     console.log(req.body);
     const { searchInput } = req.body;
     Name.findAll({
-      attributes: ["name", "link"],
+      attributes: ["id", "name", "link"],
       where: {
         name: {
-          [Sequelize.Op.startsWith]: searchInput
+          [Sequelize.Op.substring]: searchInput
         }
       }
     })
