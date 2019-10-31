@@ -15,7 +15,7 @@ const sequelize = new Sequelize("pali_names", null, null, {
 sequelize
   .authenticate()
   .then(() => console.log("Connected to the database"))
-  .catch(error => console.error("Error connecting to the databse: ", error));
+  .catch(error => console.error("Error connecting to the database: ", error));
 const Name = sequelize.define(
   "name",
   {
@@ -38,11 +38,13 @@ app.prepare().then(() => {
   server.use(bodyParser.urlencoded({ extended: true }));
 
   server.post("/search", function(req, res) {
+    console.log(req.body);
+    const { searchInput } = req.body;
     Name.findAll({
       attributes: ["name", "link"],
       where: {
         name: {
-          [Sequelize.Op.startsWith]: "ariya"
+          [Sequelize.Op.startsWith]: searchInput
         }
       }
     })
@@ -54,7 +56,7 @@ app.prepare().then(() => {
         return res.json({ error: error.message });
       });
   });
-  server.get("*", function(req, res) {
+  server.all("*", function(req, res) {
     return handle(req, res);
   });
 
