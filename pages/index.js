@@ -7,10 +7,12 @@ import NoResults from "../components/NoResults";
 
 function Index() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function handleSearch(searchInput) {
-    if (searchInput.trim().length > 2) {
+    if (!loading && searchInput.trim().length > 2) {
       try {
+        setLoading(true);
         const res = await fetch("/search", {
           method: "POST",
           headers: {
@@ -19,6 +21,7 @@ function Index() {
           body: JSON.stringify({ searchInput })
         });
         const data = JSON.parse(await res.json());
+        setLoading(false);
         if (data.error) {
           throw new Error(data.error);
         }
@@ -28,6 +31,7 @@ function Index() {
         data.length > 0 ? setData(data) : setData("");
       } catch (error) {
         console.error(error);
+        setLoading(false);
       }
     }
   }
