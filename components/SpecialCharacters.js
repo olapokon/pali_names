@@ -13,6 +13,29 @@ function SpecialCharacters({ insertSpecialCharacter }) {
         .specialCharacters {
           display: flex;
           justify-content: center;
+          margin-top: 0.2rem;
+        }
+
+        .specialCharacters input {
+          font-size: 2rem;
+          background-color: #fff;
+          cursor: pointer;
+          border: none;
+          border-bottom: 0.3rem solid orchid;
+          color: #9852f9;
+          padding: 0.4rem 0.5rem 0.05rem 0.5rem;
+        }
+
+        .specialCharacters input:not(:last-child) {
+          margin-right: 0.4rem;
+        }
+
+        .specialCharacters input:hover {
+          background-color: #ffff1a;
+        }
+
+        .specialCharacters input:focus {
+          outline: none;
         }
       `}</style>
     </div>

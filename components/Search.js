@@ -34,22 +34,49 @@ function Search({ handleSearch }) {
         type="text"
         value={input}
         onChange={handleChange}
+        placeholder="Search"
       />
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
-      <input className="search__button" type="submit" onClick={handleSubmit} />
+      <input
+        className="search__button"
+        value="Search"
+        type="submit"
+        onClick={handleSubmit}
+      />
       <style jsx>{`
         .search {
           display: flex;
           flex-direction: column;
           align-items: center;
+          margin-top: 4rem;
         }
 
         .search__input {
-          width: 15rem;
+          width: 25rem;
           padding: 0.5rem 1rem;
+          font-size: 3rem;
         }
 
         .search__input:focus {
+          outline: none;
+        }
+
+        .search__button {
+          font-size: 3rem;
+          margin-top: 1rem;
+          cursor: pointer;
+          color: #6807f9;
+          border: none;
+          border-bottom: 0.3rem solid #6807f9;
+          background-color: #fff;
+          padding: 0.5rem 0.6rem 0.1rem 0.6rem;
+        }
+
+        .search__button:hover {
+          background-color: #ffff1a;
+        }
+
+        .search__button:focus {
           outline: none;
         }
       `}</style>

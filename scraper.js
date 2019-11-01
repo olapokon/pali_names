@@ -4,7 +4,7 @@ const { sequelize, Name } = require("./database");
 
 sequelize.sync({ force: true });
 
-const url = "http://www.palikanon.com/english/pali_names/";
+const rootUrl = "http://www.palikanon.com/english/pali_names/";
 
 async function getPages(url) {
   console.log("running getPages");
@@ -15,7 +15,11 @@ async function getPages(url) {
 
   const letterPages = [];
   $("b > a").map(function(i, el) {
-    return letterPages.push($(el).attr("href"));
+    const pageLink = $(el).attr("href");
+    return letterPages.push({
+      letterUrlSegment: pageLink.slice(0, pageLink.indexOf("/") + 1),
+      pageUrlSegment: pageLink.slice(pageLink.indexOf("/") + 1)
+    });
   });
 
   // for each letter page, get additional pages for the letter, if any
@@ -23,38 +27,59 @@ async function getPages(url) {
   for (page of letterPages) {
     pages.push(page);
 
-    const data = await (await fetch(`${url}${page}`)).text();
+    const data = await (await fetch(
+      `${url}${page.letterUrlSegment}${page.pageUrlSegment}`
+    )).text();
     const $ = cheerio.load(data);
-    // keep the uri segment for the letter in question, on which the subpage uris are appended
-    const uriSegment = page.slice(0, page.indexOf("/") + 1);
     $("td")
       .find("a")
       .map(function(i, el) {
-        pages.push(`${uriSegment}${$(el).attr("href")}`);
+        pages.push({
+          letterUrlSegment: page.letterUrlSegment,
+          pageUrlSegment: $(el).attr("href")
+        });
       });
   }
 
-  // return the addresses of all the pages in the dictionary
   return pages;
 }
 
-async function getHTML(url) {
+async function getHTML(rootUrl, letterUrl, pageUrl) {
   console.log("running getHTML");
-  const data = await (await fetch(url)).text();
+  const data = await (await fetch(`${rootUrl}${letterUrl}${pageUrl}`)).text();
   const $ = cheerio.load(data);
 
   const namesArray = [];
   // returning an array of objects { name: '', link: ''} to be used for bulkCreate into the database
   $("li > b").map(function(i, el) {
+    // if the name has it's own page, get the link to that page,
+    // otherwise, get the link to the page of the dictionary
+    let link = rootUrl + letterUrl + pageUrl;
+    if (
+      $(el).find("a").length > 0 &&
+      $(el)
+        .find("a")
+        .attr("href")
+    ) {
+      link = $(el)
+        .find("a")
+        .attr("href");
+
+      // links are not of consistent format on the website, need to account for the different possibilities
+      if (link[0] === ".") {
+        link = rootUrl + link.slice(3);
+      } else {
+        link = rootUrl + letterUrl + link;
+      }
+    }
+
     return namesArray.push({
       name: $(el)
         .text()
         .trim(),
-      link: url
+      link
     });
   });
-
-  // return all the dictionary entries in this page
   return namesArray;
 }
 
@@ -71,17 +96,19 @@ async function createDatabase(url) {
     let onePageData;
     try {
       onePageData = await getHTML(
-        `http://www.palikanon.com/english/pali_names/${page}`
+        rootUrl,
+        page.letterUrlSegment,
+        page.pageUrlSegment
       );
       // save all the names in the page into the database in bulk
       Name.bulkCreate(onePageData);
     } catch (error) {
-      console.log(
-        `scraping failed at http://www.palikanon.com/english/pali_names/${page} due to an error`
-      );
       console.error(error.message);
+      console.log(
+        `scraping failed at http://www.palikanon.com/english/pali_names/${page.letterUrlSegment}${page.pageUrlSegment} due to an error`
+      );
     }
   }
 }
 
-createDatabase(url);
+createDatabase(rootUrl);

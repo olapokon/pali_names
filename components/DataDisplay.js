@@ -1,6 +1,6 @@
 function DataDisplay({ data }) {
   return (
-    <div>
+    <div className="display">
       <ul>
         {data.length > 0 &&
           data.map(name => (
@@ -12,6 +12,11 @@ function DataDisplay({ data }) {
           ))}
       </ul>
       <style jsx>{`
+        .display {
+          margin-top: 3rem;
+          font-size: 2rem;
+        }
+
         li {
           list-style-type: none;
           display: flex;
@@ -19,7 +24,7 @@ function DataDisplay({ data }) {
 
         a:link,
         a:visited {
-          color: orchid;
+          color: #c299fc;
           text-decoration: none;
           width: 100%;
           padding: 0.5rem 1rem;

@@ -36,6 +36,18 @@ function Index() {
     <div className="main">
       <Search handleSearch={handleSearch} />
       {data ? <DataDisplay data={data} /> : <NoResults />}
+      <style jsx global>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: inherit;
+        }
+
+        html {
+          font-size: 62.5%;
+          box-sizing: border-box;
+        }
+      `}</style>
       <style jsx>{`
         .main {
           display: flex;
