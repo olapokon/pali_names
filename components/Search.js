@@ -1,4 +1,5 @@
 import SpecialCharacters from "./SpecialCharacters";
+import Info from "./Info";
 
 import { useState } from "react";
 
@@ -26,16 +27,19 @@ function Search({ handleSearch }) {
 
   return (
     <form className="search">
-      <input
-        className="search__input"
-        name="searchInput"
-        autoFocus
-        ref={inputRef}
-        type="text"
-        value={input}
-        onChange={handleChange}
-        placeholder="Search"
-      />
+      <div className="search-info-container">
+        <input
+          className="search__input"
+          name="searchInput"
+          autoFocus
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={handleChange}
+          placeholder="Search"
+        />
+        <Info />
+      </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
       <input
         className="search__button"
@@ -49,6 +53,10 @@ function Search({ handleSearch }) {
           flex-direction: column;
           align-items: center;
           margin-top: 4rem;
+        }
+
+        .search-info-container {
+          position: relative;
         }
 
         .search__input {
