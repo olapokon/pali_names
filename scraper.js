@@ -44,8 +44,12 @@ async function getPages(url) {
   return pages;
 }
 
+// this function takes a url in there pieces, e.g.
+// `http://www.palikanon.com/english/pali_names/`, `aa/`, `a1_ad.htm`
 async function getHTML(rootUrl, letterUrl, pageUrl) {
-  console.log("running getHTML");
+  console.log(`running getHTML for ${rootUrl}${letterUrl}${pageUrl}`);
+  console.log(`letterUrl = ${letterUrl}`);
+  console.log(`pageUrl = ${pageUrl}`);
   const data = await (await fetch(`${rootUrl}${letterUrl}${pageUrl}`)).text();
   const $ = cheerio.load(data);
 
@@ -68,6 +72,8 @@ async function getHTML(rootUrl, letterUrl, pageUrl) {
       // links are not of consistent format on the website, need to account for the different possibilities
       if (link[0] === ".") {
         link = rootUrl + link.slice(3);
+      } else if (pageUrl === "../maha/maha.htm") {
+        link = rootUrl + "maha/" + link;
       } else {
         link = rootUrl + letterUrl + link;
       }
