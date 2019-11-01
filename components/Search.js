@@ -81,7 +81,7 @@ function Search({ handleSearch }) {
         }
 
         .search__button:hover {
-          background-color: #ffff1a;
+          background-color: #ffffb3;
         }
 
         .search__button:focus {

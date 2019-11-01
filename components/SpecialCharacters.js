@@ -31,7 +31,7 @@ function SpecialCharacters({ insertSpecialCharacter }) {
         }
 
         .specialCharacters input:hover {
-          background-color: #ffff1a;
+          background-color: #ffffb3;
         }
 
         .specialCharacters input:focus {
