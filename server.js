@@ -2,6 +2,7 @@ const express = require("express");
 const next = require("next");
 const Sequelize = require("sequelize");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
 
 const { Name } = require("./database");
 
@@ -13,6 +14,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
+  server.use(helmet());
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
 
