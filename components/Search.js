@@ -1,5 +1,6 @@
 import SpecialCharacters from "./SpecialCharacters";
 import Info from "./Info";
+import AutoComplete from "./AutoComplete";
 
 import { useState } from "react";
 
@@ -8,9 +9,14 @@ function Search({ handleSearch }) {
 
   const inputRef = React.createRef();
 
+  // let autoCompleteTimeout;
+
   function handleChange(event) {
     const { value } = event.target;
     setInput(value);
+    // autoCompleteTimeout = window.setTimeout(function() {
+    //   setError("");
+    // }, 1000);
   }
 
   function insertSpecialCharacter(specialCharacter) {
@@ -22,6 +28,7 @@ function Search({ handleSearch }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    // window.clearTimeout(autoCompleteTimeout);
     handleSearch(input);
   }
 
@@ -39,6 +46,7 @@ function Search({ handleSearch }) {
           placeholder="Search"
         />
         <Info />
+        {/* <AutoComplete /> */}
       </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
       <input
@@ -59,7 +67,6 @@ function Search({ handleSearch }) {
         }
 
         .search__input {
-          box-sizing: inherit;
           width: 25rem;
           padding: 0.5rem 1rem;
           font-size: 3rem;
@@ -67,7 +74,7 @@ function Search({ handleSearch }) {
 
         .search__input:focus {
           box-shadow: 0 0 0.5rem fuchsia;
-          border: 0.1rem solid fuchsia;
+          outline: 0.2rem solid fuchsia;
         }
 
         .search__button {

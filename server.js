@@ -20,7 +20,7 @@ app.prepare().then(() => {
 
   server.post("/search", function(req, res) {
     console.log(req.body);
-    const { searchInput } = req.body;
+    const { searchInput, searchType } = req.body;
     Name.findAll({
       attributes: ["id", "name", "link"],
       where: {
@@ -30,7 +30,6 @@ app.prepare().then(() => {
       }
     })
       .then(names => {
-        console.log(JSON.stringify(names));
         return res.json(JSON.stringify(names));
       })
       .catch(error => {

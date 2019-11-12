@@ -13,7 +13,7 @@ function Index() {
 
   let errorTimeout;
 
-  async function handleSearch(searchInput) {
+  async function handleSearch(searchInput, searchType = "substring") {
     if (!loading && searchInput.trim().length > 2) {
       try {
         setLoading(true);
@@ -22,7 +22,7 @@ function Index() {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ searchInput })
+          body: JSON.stringify({ searchInput, searchType })
         });
         const data = JSON.parse(await res.json());
         setLoading(false);
@@ -35,15 +35,20 @@ function Index() {
         data.length > 0 ? setData(data) : setData("");
       } catch (error) {
         console.error(error);
+        displayError(error);
         setLoading(false);
       }
-    } else if (!loading) {
-      window.clearTimeout(errorTimeout);
-      setError("Enter 3 or more characters");
-      errorTimeout = window.setTimeout(function() {
-        setError("");
-      }, 4000);
+    } else if (!loading && searchInput.trim().length <= 2) {
+      displayError("Enter 3 or more characters");
     }
+  }
+
+  function displayError(errorMessage) {
+    window.clearTimeout(errorTimeout);
+    setError(errorMessage);
+    errorTimeout = window.setTimeout(function() {
+      setError("");
+    }, 4000);
   }
 
   return (
