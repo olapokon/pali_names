@@ -25,7 +25,7 @@ function Info() {
           visibility: hidden;
           position: absolute;
           z-index: 100;
-          top: 0;
+          top: 1.5rem;
           right: 0;
           width: 22rem;
           padding: 1rem;

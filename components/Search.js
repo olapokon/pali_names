@@ -52,7 +52,6 @@ function Search({ handleSearch }) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          margin-top: 4rem;
         }
 
         .search-info-container {
@@ -60,13 +59,15 @@ function Search({ handleSearch }) {
         }
 
         .search__input {
+          box-sizing: inherit;
           width: 25rem;
           padding: 0.5rem 1rem;
           font-size: 3rem;
         }
 
         .search__input:focus {
-          outline: none;
+          box-shadow: 0 0 0.5rem fuchsia;
+          border: 0.1rem solid fuchsia;
         }
 
         .search__button {

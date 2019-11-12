@@ -4,10 +4,14 @@ import fetch from "isomorphic-unfetch";
 import Search from "../components/Search";
 import DataDisplay from "../components/DataDisplay";
 import NoResults from "../components/NoResults";
+import ErrorMessage from "../components/ErrorMessage";
 
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  let errorTimeout;
 
   async function handleSearch(searchInput) {
     if (!loading && searchInput.trim().length > 2) {
@@ -33,11 +37,18 @@ function Index() {
         console.error(error);
         setLoading(false);
       }
+    } else if (!loading) {
+      window.clearTimeout(errorTimeout);
+      setError("Enter 3 or more characters");
+      errorTimeout = window.setTimeout(function() {
+        setError("");
+      }, 4000);
     }
   }
 
   return (
     <div className="main">
+      {error && <ErrorMessage errorMessage={error} />}
       <Search handleSearch={handleSearch} />
       {data ? <DataDisplay data={data} /> : <NoResults />}
       <style jsx global>{`
@@ -57,6 +68,7 @@ function Index() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          margin-top: 4rem;
         }
       `}</style>
     </div>
