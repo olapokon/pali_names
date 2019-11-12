@@ -2,8 +2,8 @@ const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize("pali_names", null, null, {
   dialect: "sqlite",
-  storage: "./pali_names_database",
-  logging: false
+  storage: "./pali_names_database"
+  // logging: false
 });
 
 sequelize

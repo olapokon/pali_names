@@ -4,23 +4,20 @@ import AutoComplete from "./AutoComplete";
 
 import { useState } from "react";
 
-function Search({ handleSearch }) {
+function Search({ handleSearch, handleAutoCompleteTimeout, autoCompleteData }) {
   const [input, setInput] = useState("");
 
   const inputRef = React.createRef();
 
-  // let autoCompleteTimeout;
-
   function handleChange(event) {
     const { value } = event.target;
+    handleAutoCompleteTimeout(value);
     setInput(value);
-    // autoCompleteTimeout = window.setTimeout(function() {
-    //   setError("");
-    // }, 1000);
   }
 
   function insertSpecialCharacter(specialCharacter) {
     const newInput = input + specialCharacter;
+    handleAutoCompleteTimeout(newInput);
     setInput(newInput);
     // return focus to the input after clicking a special character button
     inputRef.current.focus();
@@ -28,8 +25,7 @@ function Search({ handleSearch }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    // window.clearTimeout(autoCompleteTimeout);
-    handleSearch(input);
+    handleSearch(input.trim());
   }
 
   return (
@@ -41,12 +37,15 @@ function Search({ handleSearch }) {
           autoFocus
           ref={inputRef}
           type="text"
+          autoComplete="off"
           value={input}
           onChange={handleChange}
           placeholder="Search"
         />
         <Info />
-        {/* <AutoComplete /> */}
+        {autoCompleteData.length > 0 && (
+          <AutoComplete autoCompleteData={autoCompleteData} />
+        )}
       </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
       <input
