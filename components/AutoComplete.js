@@ -1,4 +1,10 @@
-function AutoComplete({ autoCompleteData, handleAutoCompleteSearch }) {
+import SpecialCharacters from "./SpecialCharacters";
+
+function AutoComplete({
+  autoCompleteData,
+  handleAutoCompleteSearch,
+  specialCharacters
+}) {
   function handleClick(event) {
     const name = event.target.getAttribute("name");
     console.log("running autocomplete select: " + name);
@@ -7,6 +13,7 @@ function AutoComplete({ autoCompleteData, handleAutoCompleteSearch }) {
 
   return (
     <div className="autoComplete">
+      {specialCharacters}
       <ul>
         {autoCompleteData.length > 0 &&
           autoCompleteData.slice(0, 10).map(name => {

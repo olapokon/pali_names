@@ -4,7 +4,7 @@ function Info() {
       <span className="info_icon">Info</span>
       <div className="info_popup">
         <ul>
-          <li>search for substrings of 3 or more characters</li>
+          <li>search for strings of 3 or more characters</li>
           <li>use the buttons to enter special characters</li>
           <li>
             individual links are returned for each entry when available,

@@ -56,12 +56,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
           onChange={handleChange}
           placeholder="Search"
         />
-        <button
-          className="search__button"
-          // value="Search"
-          type="submit"
-          onClick={handleSubmit}
-        >
+        <button className="search__button" type="submit" onClick={handleSubmit}>
           <FontAwesomeIcon icon={faSearch} />
         </button>
         <Info />
@@ -69,18 +64,15 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
           <AutoComplete
             autoCompleteData={autoCompleteData}
             handleAutoCompleteSearch={handleAutoCompleteSearch}
+            specialCharacters={
+              <SpecialCharacters
+                insertSpecialCharacter={insertSpecialCharacter}
+              />
+            }
           />
         )}
       </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
-      {/* <div
-        className="search__button"
-        // value="Search"
-        type="submit"
-        onClick={handleSubmit}
-      >
-        <FontAwesomeIcon icon={faSearch} />
-      </div> */}
       <style jsx>{`
         .search {
           display: flex;

@@ -13,7 +13,7 @@ function SpecialCharacters({ insertSpecialCharacter }) {
         .specialCharacters {
           display: flex;
           justify-content: center;
-          margin-top: 0.2rem;
+          margin: 0.2rem 0;
         }
 
         .specialCharacters input {
