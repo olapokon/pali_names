@@ -18,7 +18,6 @@ function Index() {
   let autoCompleteTimeout;
 
   async function handleSearch(searchInput, searchType = searchFilter) {
-    console.log(`searchInput=${searchInput} searchType=${searchType}`);
     setAutoCompleteData([]);
     clearTimeout(autoCompleteTimeout);
 
@@ -71,7 +70,7 @@ function Index() {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ searchInput, searchType: searchFilter })
+          body: JSON.stringify({ searchInput, searchType: "startswith" })
         });
         const data = JSON.parse(await res.json());
         if (data.error) {

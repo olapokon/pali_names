@@ -4,7 +4,7 @@ const Sequelize = require("sequelize");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 
-const { Name } = require("./database");
+const { sequelize, Name } = require("./database");
 
 const PORT = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -20,26 +20,50 @@ app.prepare().then(() => {
 
   server.post("/search", function(req, res) {
     console.log(req.body);
-    const { searchInput, searchType } = req.body;
-    if (searchType === "exact") {
-      operation = Sequelize.Op.eq;
-    } else if (searchType === "startswith") {
-      operation = Sequelize.Op.startsWith;
+    let { searchInput, searchType } = req.body;
+    let orSearchInput;
+    searchInput = searchInput.toLowerCase();
+
+    // sqlite does not support case-insensitive queries for unicode characters
+    if (searchType === "startswith") {
+      searchInput = searchInput[0].toUpperCase() + searchInput.slice(1) + "%";
     } else if (searchType === "substring") {
-      operation = Sequelize.Op.substring;
+      if (
+        searchInput[0] === "ā" ||
+        searchInput[0] === "ū" ||
+        searchInput[0] === "ī" ||
+        searchInput[0] === "ñ"
+      ) {
+        orSearchInput =
+          "%" + searchInput[0].toUpperCase() + searchInput.slice(1) + "%";
+      }
+      searchInput = "%" + searchInput + "%";
     } else if (searchType === "endswith") {
-      operation = Sequelize.Op.endsWith;
+      searchInput = "%" + searchInput;
     }
+
+    if (orSearchInput) {
+      query = {
+        [Sequelize.Op.or]: [
+          {
+            name: sequelize.where(sequelize.col("name"), "LIKE", searchInput)
+          },
+          {
+            name: sequelize.where(sequelize.col("name"), "LIKE", orSearchInput)
+          }
+        ]
+      };
+    } else {
+      query = {
+        name: sequelize.where(sequelize.col("name"), "LIKE", searchInput)
+      };
+    }
+
     Name.findAll({
       attributes: ["id", "name", "link"],
-      where: {
-        name: {
-          [operation]: searchInput
-        }
-      }
+      where: query
     })
       .then(names => {
-        // console.log(JSON.stringify(names));
         return res.json(JSON.stringify(names));
       })
       .catch(error => {
