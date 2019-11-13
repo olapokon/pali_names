@@ -21,7 +21,6 @@ function SpecialCharacters({ insertSpecialCharacter }) {
           background-color: #fff;
           cursor: pointer;
           border: none;
-          border-bottom: 0.3rem solid orchid;
           color: #9852f9;
           padding: 0.4rem 0.5rem 0.05rem 0.5rem;
         }
@@ -31,7 +30,8 @@ function SpecialCharacters({ insertSpecialCharacter }) {
         }
 
         .specialCharacters input:hover {
-          background-color: #ffffb3;
+          background-color: #9852f9;
+          color: #fff;
         }
 
         .specialCharacters input:focus {

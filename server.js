@@ -23,11 +23,11 @@ app.prepare().then(() => {
     const { searchInput, searchType } = req.body;
     if (searchType === "exact") {
       operation = Sequelize.Op.eq;
-    } else if (searchType === "starts with") {
+    } else if (searchType === "startswith") {
       operation = Sequelize.Op.startsWith;
     } else if (searchType === "substring") {
       operation = Sequelize.Op.substring;
-    } else if (searchType === "ends with") {
+    } else if (searchType === "endswith") {
       operation = Sequelize.Op.endsWith;
     }
     Name.findAll({
@@ -39,6 +39,7 @@ app.prepare().then(() => {
       }
     })
       .then(names => {
+        // console.log(JSON.stringify(names));
         return res.json(JSON.stringify(names));
       })
       .catch(error => {

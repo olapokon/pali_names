@@ -5,23 +5,26 @@ import Search from "../components/Search";
 import DataDisplay from "../components/DataDisplay";
 import NoResults from "../components/NoResults";
 import ErrorMessage from "../components/ErrorMessage";
+import SearchFilter from "../components/SearchFilter";
 
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [autoCompleteData, setAutoCompleteData] = useState([]);
+  const [searchFilter, setSearchFilter] = useState("substring");
 
   let errorTimeout;
   let autoCompleteTimeout;
 
-  async function handleSearch(searchInput, searchType = "substring") {
+  async function handleSearch(searchInput, searchType = searchFilter) {
+    console.log(`searchInput=${searchInput} searchType=${searchType}`);
+    setAutoCompleteData([]);
+    clearTimeout(autoCompleteTimeout);
+
     if (!loading && searchInput.trim().length > 2) {
       try {
         setLoading(true);
-        setAutoCompleteData([]);
-        clearTimeout(autoCompleteTimeout);
-
         const res = await fetch("/search", {
           method: "POST",
           headers: {
@@ -40,7 +43,7 @@ function Index() {
         data.length > 0 ? setData(data) : setData("");
       } catch (error) {
         console.error(error);
-        displayError(error);
+        displayError(error.message);
         setLoading(false);
       }
     } else if (!loading && searchInput.trim().length <= 2) {
@@ -68,7 +71,7 @@ function Index() {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ searchInput, searchType: "starts with" })
+          body: JSON.stringify({ searchInput, searchType: searchFilter })
         });
         const data = JSON.parse(await res.json());
         if (data.error) {
@@ -100,6 +103,7 @@ function Index() {
         updateAutoComplete={updateAutoComplete}
         autoCompleteData={autoCompleteData}
       />
+      <SearchFilter setSearchFilter={setSearchFilter} />
       {data ? <DataDisplay data={data} /> : <NoResults />}
       <style jsx global>{`
         * {

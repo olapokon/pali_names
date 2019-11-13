@@ -1,5 +1,3 @@
-import SpecialCharacters from "./SpecialCharacters";
-
 function AutoComplete({
   autoCompleteData,
   handleAutoCompleteSearch,
