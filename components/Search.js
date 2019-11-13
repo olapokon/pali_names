@@ -1,9 +1,11 @@
+import { useState, useRef } from "react";
+import useHandleClickOutside from "../lib/useHandleClickOutside";
 import SpecialCharacters from "./SpecialCharacters";
 import Info from "./Info";
 import AutoComplete from "./AutoComplete";
 
-import { useState, useRef } from "react";
-import useHandleClickOutside from "../lib/useHandleClickOutside";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
   const [input, setInput] = useState("");
@@ -54,6 +56,14 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
           onChange={handleChange}
           placeholder="Search"
         />
+        <button
+          className="search__button"
+          // value="Search"
+          type="submit"
+          onClick={handleSubmit}
+        >
+          <FontAwesomeIcon icon={faSearch} />
+        </button>
         <Info />
         {autoCompleteData.length > 0 && (
           <AutoComplete
@@ -63,12 +73,14 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
         )}
       </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />
-      <input
+      {/* <div
         className="search__button"
-        value="Search"
+        // value="Search"
         type="submit"
         onClick={handleSubmit}
-      />
+      >
+        <FontAwesomeIcon icon={faSearch} />
+      </div> */}
       <style jsx>{`
         .search {
           display: flex;
@@ -78,12 +90,15 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
 
         .search-info-container {
           position: relative;
+          display: flex;
+          align-items: center;
         }
 
         .search__input {
           width: 25rem;
           padding: 0.5rem 1rem;
           font-size: 3rem;
+          margin-right: -4.7rem;
         }
 
         .search__input:focus {
@@ -92,18 +107,16 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
         }
 
         .search__button {
-          font-size: 3rem;
-          margin-top: 1rem;
+          font-size: 3.5rem;
           cursor: pointer;
-          color: #6807f9;
+          color: #fff;
           border: none;
-          border-bottom: 0.3rem solid #6807f9;
-          background-color: #fff;
+          background-color: #6807f9;
           padding: 0.5rem 0.6rem 0.1rem 0.6rem;
         }
 
         .search__button:hover {
-          background-color: #ffffb3;
+          background-color: fuchsia;
         }
 
         .search__button:focus {

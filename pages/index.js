@@ -6,6 +6,8 @@ import DataDisplay from "../components/DataDisplay";
 import NoResults from "../components/NoResults";
 import ErrorMessage from "../components/ErrorMessage";
 
+// import searchIcon from "/static/search-icon.svg";
+
 function Index() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
