@@ -13,10 +13,6 @@ function Info() {
         </ul>
       </div>
       <style jsx>{`
-        ul {
-          list-style: none;
-        }
-
         .info_icon {
           position: absolute;
           top: 50%;

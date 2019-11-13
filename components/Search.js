@@ -2,22 +2,30 @@ import SpecialCharacters from "./SpecialCharacters";
 import Info from "./Info";
 import AutoComplete from "./AutoComplete";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import useHandleClickOutside from "../lib/useHandleClickOutside";
 
-function Search({ handleSearch, handleAutoCompleteTimeout, autoCompleteData }) {
+function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
   const [input, setInput] = useState("");
 
-  const inputRef = React.createRef();
+  const inputRef = useRef(null);
+  const searchContainerRef = useRef(null);
+
+  useHandleClickOutside(searchContainerRef, handleBlur);
 
   function handleChange(event) {
     const { value } = event.target;
-    handleAutoCompleteTimeout(value);
+    updateAutoComplete(value);
     setInput(value);
+  }
+
+  function handleBlur() {
+    updateAutoComplete("", true);
   }
 
   function insertSpecialCharacter(specialCharacter) {
     const newInput = input + specialCharacter;
-    handleAutoCompleteTimeout(newInput);
+    updateAutoComplete(newInput);
     setInput(newInput);
     // return focus to the input after clicking a special character button
     inputRef.current.focus();
@@ -28,8 +36,12 @@ function Search({ handleSearch, handleAutoCompleteTimeout, autoCompleteData }) {
     handleSearch(input.trim());
   }
 
+  function handleAutoCompleteSearch(input) {
+    handleSearch(input, "exact");
+  }
+
   return (
-    <form className="search">
+    <form className="search" ref={searchContainerRef}>
       <div className="search-info-container">
         <input
           className="search__input"
@@ -44,7 +56,10 @@ function Search({ handleSearch, handleAutoCompleteTimeout, autoCompleteData }) {
         />
         <Info />
         {autoCompleteData.length > 0 && (
-          <AutoComplete autoCompleteData={autoCompleteData} />
+          <AutoComplete
+            autoCompleteData={autoCompleteData}
+            handleAutoCompleteSearch={handleAutoCompleteSearch}
+          />
         )}
       </div>
       <SpecialCharacters insertSpecialCharacter={insertSpecialCharacter} />

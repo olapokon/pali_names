@@ -20,7 +20,7 @@ function Index() {
       try {
         setLoading(true);
         setAutoCompleteData([]);
-        window.clearTimeout(autoCompleteTimeout);
+        clearTimeout(autoCompleteTimeout);
 
         const res = await fetch("/search", {
           method: "POST",
@@ -48,15 +48,20 @@ function Index() {
     }
   }
 
-  function handleAutoCompleteTimeout(value) {
-    window.clearTimeout(autoCompleteTimeout);
-    autoCompleteTimeout = window.setTimeout(function() {
-      handleAutoCompleteSearch(value);
-    }, 2000);
+  function updateAutoComplete(value, blur = false) {
+    clearTimeout(autoCompleteTimeout);
+    if (!blur) {
+      autoCompleteTimeout = setTimeout(function() {
+        handleAutoCompleteSearch(value);
+      }, 1500);
+      // when search is unfocused, clear autocomplete
+    } else {
+      setAutoCompleteData([]);
+    }
   }
 
   async function handleAutoCompleteSearch(searchInput) {
-    if (!loading) {
+    if (!loading && searchInput.trim()) {
       try {
         const res = await fetch("/search", {
           method: "POST",
@@ -80,9 +85,9 @@ function Index() {
   }
 
   function displayError(errorMessage) {
-    window.clearTimeout(errorTimeout);
+    clearTimeout(errorTimeout);
     setError(errorMessage);
-    errorTimeout = window.setTimeout(function() {
+    errorTimeout = setTimeout(function() {
       setError("");
     }, 4000);
   }
@@ -92,7 +97,7 @@ function Index() {
       {error && <ErrorMessage errorMessage={error} />}
       <Search
         handleSearch={handleSearch}
-        handleAutoCompleteTimeout={handleAutoCompleteTimeout}
+        updateAutoComplete={updateAutoComplete}
         autoCompleteData={autoCompleteData}
       />
       {data ? <DataDisplay data={data} /> : <NoResults />}
@@ -106,6 +111,10 @@ function Index() {
         html {
           font-size: 62.5%;
           box-sizing: border-box;
+        }
+
+        ul {
+          list-style: none;
         }
       `}</style>
       <style jsx>{`

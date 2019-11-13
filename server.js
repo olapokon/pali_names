@@ -21,11 +21,20 @@ app.prepare().then(() => {
   server.post("/search", function(req, res) {
     console.log(req.body);
     const { searchInput, searchType } = req.body;
+    if (searchType === "exact") {
+      operation = Sequelize.Op.eq;
+    } else if (searchType === "starts with") {
+      operation = Sequelize.Op.startsWith;
+    } else if (searchType === "substring") {
+      operation = Sequelize.Op.substring;
+    } else if (searchType === "ends with") {
+      operation = Sequelize.Op.endsWith;
+    }
     Name.findAll({
       attributes: ["id", "name", "link"],
       where: {
         name: {
-          [Sequelize.Op.substring]: searchInput
+          [operation]: searchInput
         }
       }
     })
