@@ -1,22 +1,28 @@
 function AutoComplete({
   autoCompleteData,
   handleAutoCompleteSearch,
-  specialCharacters
+  specialCharacters,
+  selectedAutoCompleteItem
 }) {
   function handleClick(event) {
     const name = event.target.getAttribute("name");
-    console.log("running autocomplete select: " + name);
+    console.log(`running onClick with name = ${name}`);
     handleAutoCompleteSearch(name);
   }
 
   return (
     <div className="autoComplete">
       {specialCharacters}
-      <ul>
+      <ul id="autoCompleteResults">
         {autoCompleteData.length > 0 &&
-          autoCompleteData.slice(0, 10).map(name => {
+          autoCompleteData.map((name, index) => {
             return (
-              <li key={name.id} name={name.name} onClick={handleClick}>
+              <li
+                key={name.id}
+                className={selectedAutoCompleteItem === index && "selected"}
+                name={name.name}
+                onClick={handleClick}
+              >
                 {name.name}
               </li>
             );
@@ -26,9 +32,9 @@ function AutoComplete({
         .autoComplete {
           position: absolute;
           z-index: 90;
-          top: 4.8rem;
+          top: 100%;
           left: 0;
-          width: 25rem;
+          right: 0;
           background-color: #fff;
           color: black;
           font-size: 1.8rem;
@@ -38,13 +44,17 @@ function AutoComplete({
           flex-direction: column;
         }
 
+        .selected {
+          background-color: gray;
+          color: white;
+        }
+
         li {
           padding: 0.5rem;
         }
 
         li:hover {
-          background-color: gray;
-          color: white;
+          cursor: pointer;
         }
       `}</style>
     </div>

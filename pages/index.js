@@ -55,7 +55,7 @@ function Index() {
     if (!blur) {
       autoCompleteTimeout = setTimeout(function() {
         handleAutoCompleteSearch(value);
-      }, 1500);
+      }, 1000);
       // when search is unfocused, clear autocomplete
     } else {
       setAutoCompleteData([]);
@@ -78,7 +78,9 @@ function Index() {
         }
         // only display autocomplete data if a search is not in progress
         if (!loading) {
-          data.length > 0 ? setAutoCompleteData(data) : setAutoCompleteData([]);
+          data.length > 0
+            ? setAutoCompleteData(data.slice(0, 10))
+            : setAutoCompleteData([]);
         }
       } catch (error) {
         console.error(error);

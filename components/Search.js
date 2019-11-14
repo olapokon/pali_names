@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import useHandleClickOutside from "../lib/useHandleClickOutside";
 import SpecialCharacters from "./SpecialCharacters";
 import Info from "./Info";
@@ -9,11 +9,50 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
   const [input, setInput] = useState("");
+  const [selectedAutoCompleteItem, setSelectedAutoCompleteItem] = useState(
+    null
+  );
 
   const inputRef = useRef(null);
   const searchContainerRef = useRef(null);
 
   useHandleClickOutside(searchContainerRef, handleBlur);
+
+  // navigate autocomplete results with the up and down arrow keys
+  useEffect(() => {
+    document.addEventListener("keydown", autoCompleteNavigation);
+    return () => {
+      document.removeEventListener("keydown", autoCompleteNavigation);
+    };
+  });
+  function autoCompleteNavigation(event) {
+    if (!autoCompleteData) {
+      return;
+    } else if (event.keyCode === 40 || event.keyCode === 38) {
+      function setSelected(index) {
+        setSelectedAutoCompleteItem(index);
+        setInput(autoCompleteData[index].name);
+      }
+      const lastIndex = autoCompleteData.length - 1;
+
+      if (selectedAutoCompleteItem === null) {
+        event.keyCode === 40 ? setSelected(0) : setSelected(lastIndex);
+      } else {
+        // down arrow
+        if (event.keyCode === 40) {
+          selectedAutoCompleteItem < lastIndex
+            ? setSelected(selectedAutoCompleteItem + 1)
+            : setSelected(0);
+        }
+        // up arrow
+        if (event.keyCode === 38) {
+          selectedAutoCompleteItem > 0
+            ? setSelected(selectedAutoCompleteItem - 1)
+            : setSelected(lastIndex);
+        }
+      }
+    }
+  }
 
   function handleChange(event) {
     const { value } = event.target;
@@ -23,10 +62,18 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
 
   function handleBlur() {
     updateAutoComplete("", true);
+    setSelectedAutoCompleteItem(null);
   }
 
+  // insert a special character, replacing highlighted text, if any
   function insertSpecialCharacter(specialCharacter) {
-    const newInput = input + specialCharacter;
+    let newInput;
+    let highLightedText = window.getSelection().toString();
+    if (highLightedText) {
+      newInput = input.replace(highLightedText, specialCharacter);
+    } else {
+      newInput = input + specialCharacter;
+    }
     updateAutoComplete(newInput);
     setInput(newInput);
     // return focus to the input after clicking a special character button
@@ -55,6 +102,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
           value={input}
           onChange={handleChange}
           placeholder="Search"
+          list="autoCompleteResults"
         />
         <button className="search__button" type="submit" onClick={handleSubmit}>
           <FontAwesomeIcon icon={faSearch} />
@@ -69,6 +117,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
                 insertSpecialCharacter={insertSpecialCharacter}
               />
             }
+            selectedAutoCompleteItem={selectedAutoCompleteItem}
           />
         )}
       </div>
@@ -90,7 +139,6 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
           width: 25rem;
           padding: 0.5rem 1rem;
           font-size: 3rem;
-          margin-right: -4.7rem;
         }
 
         .search__input:focus {
@@ -99,7 +147,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
         }
 
         .search__button {
-          font-size: 3.5rem;
+          font-size: 3.6rem;
           cursor: pointer;
           color: #fff;
           border: none;
