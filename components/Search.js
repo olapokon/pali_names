@@ -51,6 +51,10 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
             : setSelected(lastIndex);
         }
       }
+      // escape key
+    } else if (event.keyCode === 27) {
+      setSelectedAutoCompleteItem(null);
+      handleBlur();
     }
   }
 
@@ -94,6 +98,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
 
   function handleAutoCompleteSearch(input) {
     handleSearch(input, "exact");
+    setSelectedAutoCompleteItem(null);
   }
 
   return (
