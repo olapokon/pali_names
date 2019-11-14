@@ -27,9 +27,9 @@ async function getPages(url) {
   for (page of letterPages) {
     pages.push(page);
 
-    const data = await (await fetch(
-      `${url}${page.letterUrlSegment}${page.pageUrlSegment}`
-    )).text();
+    const data = await (
+      await fetch(`${url}${page.letterUrlSegment}${page.pageUrlSegment}`)
+    ).text();
     const $ = cheerio.load(data);
     $("td")
       .find("a")
@@ -48,8 +48,6 @@ async function getPages(url) {
 // `http://www.palikanon.com/english/pali_names/`, `aa/`, `a1_ad.htm`
 async function getHTML(rootUrl, letterUrl, pageUrl) {
   console.log(`running getHTML for ${rootUrl}${letterUrl}${pageUrl}`);
-  console.log(`letterUrl = ${letterUrl}`);
-  console.log(`pageUrl = ${pageUrl}`);
   const data = await (await fetch(`${rootUrl}${letterUrl}${pageUrl}`)).text();
   const $ = cheerio.load(data);
 

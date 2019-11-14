@@ -6,7 +6,6 @@ function AutoComplete({
 }) {
   function handleClick(event) {
     const name = event.target.getAttribute("name");
-    console.log(`running onClick with name = ${name}`);
     handleAutoCompleteSearch(name);
   }
 

@@ -65,14 +65,21 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
     setSelectedAutoCompleteItem(null);
   }
 
-  // insert a special character, replacing highlighted text, if any
   function insertSpecialCharacter(specialCharacter) {
     let newInput;
+    let cursorPosition;
     let highLightedText = window.getSelection().toString();
+
+    // replace highlighte text, if any
     if (highLightedText) {
       newInput = input.replace(highLightedText, specialCharacter);
+      // enter the character in the position of the cursor
     } else {
-      newInput = input + specialCharacter;
+      cursorPosition = inputRef.current.selectionStart;
+      newInput =
+        input.slice(0, cursorPosition) +
+        specialCharacter +
+        input.slice(cursorPosition);
     }
     updateAutoComplete(newInput);
     setInput(newInput);
