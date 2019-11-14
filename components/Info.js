@@ -25,13 +25,13 @@ function Info() {
           visibility: hidden;
           position: absolute;
           z-index: 100;
-          top: 1.5rem;
+          top: 50%;
           right: 0;
           width: 22rem;
           padding: 1rem;
-          background-color: #ff99ff;
+          background-color: crimson;
           color: #fff;
-          border-radius: 5px;
+          border-radius: 2px;
           font-size: 1.5rem;
 
           display: flex;
