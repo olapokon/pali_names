@@ -20,7 +20,7 @@ app.prepare().then(() => {
 
   server.post("/search", function(req, res) {
     console.log(req.body);
-    let { searchInput, searchType } = req.body;
+    let { searchInput, searchType, limit } = req.body;
     let orSearchInput;
     searchInput = searchInput.toLowerCase();
 
@@ -59,10 +59,16 @@ app.prepare().then(() => {
       };
     }
 
-    Name.findAll({
+    const searchParameters = {
       attributes: ["id", "name", "link"],
       where: query
-    })
+    };
+
+    if (limit) {
+      searchParameters.limit = limit;
+    }
+
+    Name.findAll(searchParameters)
       .then(names => {
         return res.json(JSON.stringify(names));
       })

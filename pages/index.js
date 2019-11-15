@@ -63,6 +63,7 @@ function Index() {
   }
 
   async function handleAutoCompleteSearch(searchInput) {
+    // limt the autocomplete query to 10 results
     if (!loading && searchInput.trim()) {
       try {
         const res = await fetch("/search", {
@@ -70,7 +71,11 @@ function Index() {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ searchInput, searchType: "startswith" })
+          body: JSON.stringify({
+            searchInput,
+            searchType: "startswith",
+            limit: 10
+          })
         });
         const data = JSON.parse(await res.json());
         if (data.error) {
@@ -78,9 +83,7 @@ function Index() {
         }
         // only display autocomplete data if a search is not in progress
         if (!loading) {
-          data.length > 0
-            ? setAutoCompleteData(data.slice(0, 10))
-            : setAutoCompleteData([]);
+          data.length > 0 ? setAutoCompleteData(data) : setAutoCompleteData([]);
         }
       } catch (error) {
         console.error(error);
