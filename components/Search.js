@@ -60,6 +60,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
 
   function handleChange(event) {
     const { value } = event.target;
+    setSelectedAutoCompleteItem(null);
     updateAutoComplete(value);
     setInput(value);
   }
@@ -85,6 +86,7 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
         specialCharacter +
         input.slice(cursorPosition);
     }
+    setSelectedAutoCompleteItem(null);
     updateAutoComplete(newInput);
     setInput(newInput);
     // return focus to the input after clicking a special character button
@@ -97,8 +99,8 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
   }
 
   function handleAutoCompleteSearch(input) {
-    handleSearch(input, "exact");
     setSelectedAutoCompleteItem(null);
+    handleSearch(input, "exact");
   }
 
   return (
