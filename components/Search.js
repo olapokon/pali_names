@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import useHandleClickOutside from "../lib/useHandleClickOutside";
+import useKeyboardNavigation from "../lib/useKeyboardNavigation";
 import SpecialCharacters from "./SpecialCharacters";
 import Info from "./Info";
 import AutoComplete from "./AutoComplete";
@@ -18,45 +19,17 @@ function Search({ handleSearch, updateAutoComplete, autoCompleteData }) {
 
   useHandleClickOutside(searchContainerRef, handleBlur);
 
-  // navigate autocomplete results with the up and down arrow keys
-  useEffect(() => {
-    document.addEventListener("keydown", autoCompleteNavigation);
-    return () => {
-      document.removeEventListener("keydown", autoCompleteNavigation);
-    };
-  });
-  function autoCompleteNavigation(event) {
-    if (!autoCompleteData) {
-      return;
-    } else if (event.keyCode === 40 || event.keyCode === 38) {
-      function setSelected(index) {
-        setSelectedAutoCompleteItem(index);
-        setInput(autoCompleteData[index].name);
-      }
-      const lastIndex = autoCompleteData.length - 1;
-
-      if (selectedAutoCompleteItem === null) {
-        event.keyCode === 40 ? setSelected(0) : setSelected(lastIndex);
-      } else {
-        // down arrow
-        if (event.keyCode === 40) {
-          selectedAutoCompleteItem < lastIndex
-            ? setSelected(selectedAutoCompleteItem + 1)
-            : setSelected(0);
-        }
-        // up arrow
-        if (event.keyCode === 38) {
-          selectedAutoCompleteItem > 0
-            ? setSelected(selectedAutoCompleteItem - 1)
-            : setSelected(lastIndex);
-        }
-      }
-      // escape key
-    } else if (event.keyCode === 27) {
-      setSelectedAutoCompleteItem(null);
-      handleBlur();
-    }
+  function setSelected(index) {
+    setSelectedAutoCompleteItem(index);
+    setInput(autoCompleteData[index].name);
   }
+
+  useKeyboardNavigation(
+    autoCompleteData,
+    selectedAutoCompleteItem,
+    setSelected,
+    handleBlur
+  );
 
   function handleChange(event) {
     const { value } = event.target;
