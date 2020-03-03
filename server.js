@@ -27,6 +27,8 @@ app.prepare().then(() => {
     // sqlite does not support case-insensitive queries for unicode characters
     if (searchType === "startswith") {
       searchInput = searchInput[0].toUpperCase() + searchInput.slice(1) + "%";
+    } else if (searchType === "exact") {
+      searchInput = searchInput[0].toUpperCase() + searchInput.slice(1);
     } else if (searchType === "substring") {
       if (
         searchInput[0] === "ā" ||
